@@ -39,23 +39,23 @@ public class GHOI {
 		Button pbuttonA = new JoystickButton(primaryController, ControllerButton.A.value); 
 		Button pbuttonB = new JoystickButton(primaryController, ControllerButton.B.value); 
 		Button pbuttonX = new JoystickButton(primaryController, ControllerButton.X.value);
-//		Button pbuttonY = new JoystickButton(primaryController, ControllerButton.Y.value);
+		Button pbuttonY = new JoystickButton(primaryController, ControllerButton.Y.value);
 		Button pbuttonLB = new JoystickButton(primaryController, ControllerButton.LB.value);
 		Button pbuttonRB = new JoystickButton(primaryController, ControllerButton.RB.value); 
-//		Button pbuttonStart = new JoystickButton(primaryController, ControllerButton.START.value);
-//		Button pbuttonBack = new JoystickButton(primaryController, ControllerButton.BACK.value);
-//		Button primaryDPadUp = new DPadPress(primaryController, DPadDirection.UP); 
-//		DPadPress primaryDPadRight = new DPadPress(primaryController, DPadDirection.RIGHT);
-//		Button primaryDPadLeft = new DPadPress(primaryController, DPadDirection.LEFT);
-//		Button primaryDPadDown = new DPadPress(primaryController, DPadDirection.DOWN);
+		Button pbuttonStart = new JoystickButton(primaryController, ControllerButton.START.value);
+		Button pbuttonBack = new JoystickButton(primaryController, ControllerButton.BACK.value);
+		Button primaryDPadUp = new DPadPress(primaryController, DPadDirection.UP); 
+		DPadPress primaryDPadRight = new DPadPress(primaryController, DPadDirection.RIGHT);
+		Button primaryDPadLeft = new DPadPress(primaryController, DPadDirection.LEFT);
+		Button primaryDPadDown = new DPadPress(primaryController, DPadDirection.DOWN);
 		
 		//Declares and maps buttons to xbox controller buttons for secondary controller
 //		Button sbuttonA = new JoystickButton(secondaryController, ControllerButton.A.value); 
-		Button sbuttonB = new JoystickButton(secondaryController, ControllerButton.B.value);
+//		Button sbuttonB = new JoystickButton(secondaryController, ControllerButton.B.value);
 //		Button sbuttonX = new JoystickButton(secondaryController, ControllerButton.X.value); 
-		Button sbuttonY = new JoystickButton(secondaryController, ControllerButton.Y.value);
-		Button sbuttonLB = new JoystickButton(secondaryController, ControllerButton.LB.value);
-		Button sbuttonRB = new JoystickButton(secondaryController, ControllerButton.RB.value);
+//		Button sbuttonY = new JoystickButton(secondaryController, ControllerButton.Y.value);
+//		Button sbuttonLB = new JoystickButton(secondaryController, ControllerButton.LB.value);
+//		Button sbuttonRB = new JoystickButton(secondaryController, ControllerButton.RB.value);
 //		Button sbuttonStart = new JoystickButton(secondaryController,ControllerButton.START.value);
 //		Button sbuttonBack = new JoystickButton(secondaryController, ControllerButton.BACK.value);
 //		Button secondaryDPadUp = new DPadPress(secondaryControlsler, DPadDirection.UP);
@@ -63,20 +63,16 @@ public class GHOI {
 //		Button secondaryDPadLeft = new DPadPress(secondaryController, DPadDirection.LEFT);
 //		Button secondaryDPadDown = new DPadPress(secondaryController, DPadDirection.DOWN);
 		
-		/** @Primary_Controls */
+		/** @Primary_Controls 
 		pbuttonA.whenPressed(new SpitSlow());
 		pbuttonB.whenPressed(new SpitFast());
 		pbuttonX.whenPressed(new Collect());
 		
 		pbuttonRB.whenPressed(new AdjustSpeedMode(Speed.FAST));
 		pbuttonLB.whenPressed(new AdjustSpeedMode(Speed.SLOW));
+		*/
 		
-		/** @Secondary_Controls */
-		sbuttonB.toggleWhenPressed(new ActuateArms());
-		sbuttonY.toggleWhenPressed(new RetractArms());
-		
-		sbuttonRB.whenPressed(new DropDown());
-		sbuttonLB.whenPressed(new LiftUp());
+		pbuttonA.whenPressed(new );
 	}
 	
 	public enum Controller {P,S}; //Controller (primary or secondary)
