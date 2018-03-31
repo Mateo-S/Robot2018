@@ -1,4 +1,4 @@
-package Robot2018.src.org.usfirst.frc.team1306.robot;
+package org.usfirst.frc.team1306.robot;
 
 import org.usfirst.frc.team1306.robot.commands.cubetake.ActuateArms;
 import org.usfirst.frc.team1306.robot.commands.cubetake.Collect;
@@ -9,7 +9,10 @@ import org.usfirst.frc.team1306.robot.drivetrain.AdjustSpeedMode;
 import org.usfirst.frc.team1306.robot.drivetrain.AdjustSpeedMode.Speed;
 import org.usfirst.frc.team1306.robot.elevator.DropDown;
 import org.usfirst.frc.team1306.robot.elevator.LiftUp;
+import org.usfirst.frc.team1306.robot.subsystems.Cubetake;
 import org.usfirst.frc.team1306.robot.triggers.ControllerButton;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.buttons.Button;
@@ -21,7 +24,10 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
  * This class is the glue that binds the controls on the physical operator interface to the commands and command groups that allow control of the robot.
  * It is also where commands can get joystick/trigger readings and set the rumble on the controller.
  * 
- * @authors Jackson Goth, Sam Roquitte, and Ethan Dong
+ * Edit:
+ * I'm making it work for the GH Controller now -Mateo
+ * 
+ * @authors Jackson Goth, Sam Roquitte, Ethan Dong, and Mateo Silver
  */
 public class GHOI {
 	
@@ -44,35 +50,82 @@ public class GHOI {
 		Button pbuttonRB = new JoystickButton(primaryController, ControllerButton.RB.value); 
 		Button pbuttonStart = new JoystickButton(primaryController, ControllerButton.START.value);
 		Button pbuttonBack = new JoystickButton(primaryController, ControllerButton.BACK.value);
-		Button primaryDPadUp = new DPadPress(primaryController, DPadDirection.UP); 
-		DPadPress primaryDPadRight = new DPadPress(primaryController, DPadDirection.RIGHT);
-		Button primaryDPadLeft = new DPadPress(primaryController, DPadDirection.LEFT);
-		Button primaryDPadDown = new DPadPress(primaryController, DPadDirection.DOWN);
+		Button pbuttonXbox = new JoystickButton(primaryController, ControllerButton.XBOX.value);
+//		Button primaryDPadUp = new DPadPress(primaryController, DPadDirection.UP); 
+//		DPadPress primaryDPadRight = new DPadPress(primaryController, DPadDirection.RIGHT);
+//		Button primaryDPadLeft = new DPadPress(primaryController, DPadDirection.LEFT);
+//		Button primaryDPadDown = new DPadPress(primaryController, DPadDirection.DOWN);
 		
 		//Declares and maps buttons to xbox controller buttons for secondary controller
 //		Button sbuttonA = new JoystickButton(secondaryController, ControllerButton.A.value); 
-//		Button sbuttonB = new JoystickButton(secondaryController, ControllerButton.B.value);
+		Button sbuttonB = new JoystickButton(secondaryController, ControllerButton.B.value);
 //		Button sbuttonX = new JoystickButton(secondaryController, ControllerButton.X.value); 
-//		Button sbuttonY = new JoystickButton(secondaryController, ControllerButton.Y.value);
-//		Button sbuttonLB = new JoystickButton(secondaryController, ControllerButton.LB.value);
-//		Button sbuttonRB = new JoystickButton(secondaryController, ControllerButton.RB.value);
+		Button sbuttonY = new JoystickButton(secondaryController, ControllerButton.Y.value);
+		Button sbuttonLB = new JoystickButton(secondaryController, ControllerButton.LB.value);
+		Button sbuttonRB = new JoystickButton(secondaryController, ControllerButton.RB.value);
 //		Button sbuttonStart = new JoystickButton(secondaryController,ControllerButton.START.value);
 //		Button sbuttonBack = new JoystickButton(secondaryController, ControllerButton.BACK.value);
+//		Button sbuttonXbox = new JoystickButton(secondaryController, ControllerButton.XBOX.value);		
 //		Button secondaryDPadUp = new DPadPress(secondaryControlsler, DPadDirection.UP);
 //		Button secondaryDPadRight = new DPadPress(secondaryController, DPadDirection.RIGHT);
 //		Button secondaryDPadLeft = new DPadPress(secondaryController, DPadDirection.LEFT);
 //		Button secondaryDPadDown = new DPadPress(secondaryController, DPadDirection.DOWN);
 		
-		/** @Primary_Controls 
-		pbuttonA.whenPressed(new SpitSlow());
-		pbuttonB.whenPressed(new SpitFast());
-		pbuttonX.whenPressed(new Collect());
+		/*Commands you can use...
+		 * SpitSlow();
+		 * SpitFast();
+		 * Collect();
+		 * 
+		 * AdjustSpeedMode(Speed.FAST);
+		 * AdjustSpeedMode(Speed.SLOW);
+		 * 
+		 * ActuateArms();
+		 * RetractArms();
+		 * 
+		 * DropDown();
+		 * LiftUp();
+		 * */
 		
-		pbuttonRB.whenPressed(new AdjustSpeedMode(Speed.FAST));
-		pbuttonLB.whenPressed(new AdjustSpeedMode(Speed.SLOW));
-		*/
+		/*@Primary_Controls*/
 		
-		pbuttonA.whenPressed(new );
+		//When the climber works
+//		pbuttonXbox.whenPressed(new Climb());
+		boolean intakeUp = false;
+		boolean fastSpeed = true;
+		
+		//Whammy Bar
+		if(getJoyVal(Controller.P, Joystick.R, Axis.X) > 0.05) {
+			if(intakeUp) {new RetractArms(); intakeUp = !intakeUp;}
+			else if(!intakeUp) {new RetractArms(); intakeUp = !intakeUp;}
+		}
+		//Frets
+		pbuttonA.whenPressed(new Forwards());
+		pbuttonB.whenPressed(new TurnLeft());
+		pbuttonY.whenPressed(new TurnRight());
+		pbuttonX.whenPressed(new Backwards());
+		pbuttonLB.whenPressed(new Collect());
+		
+		//Chords
+		if(getButtonStatus(Controller.P, pbuttonA) && getButtonStatus(Controller.P, pbuttonB)) {	//if A and B are pressed (elevator up)
+			new LiftUp();
+		}
+		
+		else if(getButtonStatus(Controller.P, pbuttonB) && getButtonStatus(Controller.P, pbuttonY)) {	//if B and Y are pressed (elevator down)
+			new  DropDown();
+		}
+		
+		else if(getButtonStatus(Controller.P, pbuttonX) && getButtonStatus(Controller.P, pbuttonLB)) {	//if X and LB are pressed (intake out)
+			new SpitFast();
+		}
+		
+		else if(getButtonStatus(Controller.P, pbuttonB) && getButtonStatus(Controller.P, pbuttonY) && getButtonStatus(Controller.P, pbuttonX)) {	//if B,Y, and X are pressed (Shift Gears
+			if(fastSpeed) {
+				AdjustSpeedMode(Speed.SLOW);
+			}
+			else if (!fastSpeed) {
+				AdjustSpeedMode(Speed.FAST);
+			}
+		}
 	}
 	
 	public enum Controller {P,S}; //Controller (primary or secondary)
@@ -157,4 +210,3 @@ public class GHOI {
 		} else { return 0; }
 	}
 }
-
